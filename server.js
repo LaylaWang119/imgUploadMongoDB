@@ -20,9 +20,8 @@ app.use(bodyParser.json());
 // connect database 
 var mongoose   = require('mongoose');
 
-var uri = 'mongodb://wanglei85119:123456@ds149049.mlab.com:49049/wangleidb';
 
-//var uri = 'mongodb://<dbuser>:<dbpassword>@ds149049.mlab.com:49049/<dbname>'; //the standard MongoDB URI from mLab
+var uri = 'mongodb://<dbuser>:<dbpassword>@ds149049.mlab.com:49049/<dbname>'; //the standard MongoDB URI from mLab
 mongoose.Promise = global.Promise
 mongoose.connect(uri, function(err) {
 if (err) {
