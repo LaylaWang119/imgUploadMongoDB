@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <title>Image upload and download</title>
+
+
+  <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.min.js"></script>
+  <script src="gistfile1.js"></script>
+
+</head>
+<html>
+<body ng-app="myApp">
+	<div ng-controller="myCtrl">
+		<form>
+			<input type="file" name="image" file-model="file">
+			<button ng-click="upload()">Upload</button>
+		</form>
+
+	    <button><a href="http://localhost/img/download/{{imgId}}" target="_blank">download image</a></button>
+	</div>
+
+	
+
+<script type="text/javascript">
+var app = angular.module("myApp", []);
+
+	app.directive('fileModel', ['$parse', function ($parse) {
+            return {
+               restrict: 'A',
+               link: function(scope, element, attrs) {
+                  var model = $parse(attrs.fileModel);
+                  var modelSetter = model.assign;
+                  
+                  element.bind('change', function(){
+                     scope.$apply(function(){
+                        modelSetter(scope, element[0].files[0]);
+                     });
+                  });
+               }
+            };
+         }]);
+
+	app.controller('myCtrl', 
+	    function($scope, $http) {
+	    $scope.imgId = "";
+
+	    $scope.upload = function() {
+        var img = $scope.file;
+        uploadImg(img)
+        .success(function(res) {
+          //console.log(res);
+          $scope.imgId = res;
+          console.log($scope.imgId);
+          console.log("Employee image uploaded!");
+        })
+      }
+
+		function uploadImg(img) {
+        var fd = new FormData();
+        fd.append('img', img);
+        return $http.post('/img/upload/', fd, {
+              transformRequest: angular.identity,
+              headers: {'Content-Type': undefined}
+        });
+  }
+	})
+</script>
+
+
+
+</body>
+</html>
